@@ -24,7 +24,7 @@ cargo build
 ### Run on Linux
 
 ```bash
-cargo run --release
+cargo run
 ```
 
 ## Testing Native Build
@@ -33,13 +33,13 @@ Before bisecting Wine issues, it's recommended to verify the application works c
 
 ```bash
 # Build and run natively
-cargo run --release
+cargo run
 
 # Test with FORCE_SRGB enabled
-FORCE_SRGB=1 cargo run --release
+FORCE_SRGB=1 RUST_BACKTRACE=full cargo run
 
 # Test with FORCE_SRGB disabled
-FORCE_SRGB=0 cargo run --release
+FORCE_SRGB=0 RUST_BACKTRACE=full cargo run
 ```
 
 The native build should display a simple egui window with:
@@ -68,12 +68,12 @@ rustup target add x86_64-pc-windows-gnu
 ### Build for Windows
 
 ```bash
-cargo build --target x86_64-pc-windows-gnu --release
+cargo build --target x86_64-pc-windows-gnu
 ```
 
 The Windows executable will be located at:
 ```
-target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
+target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
 ```
 
 ### Testing with Wine
@@ -85,7 +85,7 @@ You can test the Windows build on Linux using Wine:
 sudo apt-get install wine64
 
 # Run the Windows executable
-wine target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
+wine target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
 ```
 
 ## Wine Compatibility Notes
@@ -98,19 +98,19 @@ The application supports the `FORCE_SRGB` environment variable to control sRGB f
 
 ```bash
 # Enable sRGB framebuffer
-FORCE_SRGB=1 wine target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
+FORCE_SRGB=1 RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
 # or
-FORCE_SRGB=true wine target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
+FORCE_SRGB=true RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
 
 # Disable sRGB framebuffer
-FORCE_SRGB=0 wine target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
+FORCE_SRGB=0 RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
 # or
-FORCE_SRGB=false wine target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
+FORCE_SRGB=false RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
 
 # Use default OpenGL configuration (not set or empty)
-wine target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
+wine target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
 # or
-FORCE_SRGB= wine target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
+FORCE_SRGB= RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
 ```
 
 **Behavior:**

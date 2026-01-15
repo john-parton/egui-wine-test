@@ -32,6 +32,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "baseview-wine-test"
+version = "0.1.0"
+dependencies = [
+ "baseview",
+ "gl",
+]
+
+[[package]]
 name = "bitflags"
 version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -133,14 +141,6 @@ dependencies = [
  "bitflags 1.3.2",
  "core-foundation",
  "libc",
-]
-
-[[package]]
-name = "egui-wine-test"
-version = "0.1.0"
-dependencies = [
- "baseview",
- "gl",
 ]
 
 [[package]]

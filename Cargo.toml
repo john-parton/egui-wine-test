@@ -1,5 +1,5 @@
 [package]
-name = "egui-wine-test"
+name = "baseview-wine-test"
 version = "0.1.0"
 edition = "2021"
 

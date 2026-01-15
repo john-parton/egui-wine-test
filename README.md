@@ -1,14 +1,14 @@
-# egui Wine Test
+# baseview Wine Test
 
-A minimal egui application designed for bisecting and testing OpenGL behavior under Wine.
+A minimal baseview application designed for bisecting and testing OpenGL behavior under Wine.
 
 ## Purpose
 
-This project is specifically designed to help bisect Wine behavior related to OpenGL rendering and sRGB framebuffer support. The application provides a simple egui interface with configurable OpenGL settings to isolate rendering issues.
+This project is specifically designed to help bisect Wine behavior related to OpenGL rendering and sRGB framebuffer support. The application provides a simple baseview interface with configurable OpenGL settings to isolate rendering issues.
 
 ## Features
 
-- Minimal egui interface for testing rendering behavior
+- Minimal baseview interface for testing rendering behavior
 - Configurable sRGB framebuffer support via environment variable
 - Cross-compileable to Windows for Wine testing
 - Debug output showing active OpenGL configuration
@@ -42,7 +42,7 @@ FORCE_SRGB=1 RUST_BACKTRACE=full cargo run
 FORCE_SRGB=0 RUST_BACKTRACE=full cargo run
 ```
 
-The native build should display a simple egui window with:
+The native build should display a simple baseview window with:
 - A greeting heading
 - A text input field (try typing your name)
 - An age slider (0-120)
@@ -73,7 +73,7 @@ cargo build --target x86_64-pc-windows-gnu
 
 The Windows executable will be located at:
 ```
-target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
+target/x86_64-pc-windows-gnu/debug/baseview-wine-test.exe
 ```
 
 ### Testing with Wine
@@ -85,7 +85,7 @@ You can test the Windows build on Linux using Wine:
 sudo apt-get install wine64
 
 # Run the Windows executable
-wine target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
+wine target/x86_64-pc-windows-gnu/debug/baseview-wine-test.exe
 ```
 
 ## Wine Compatibility Notes
@@ -98,19 +98,19 @@ The application supports the `FORCE_SRGB` environment variable to control sRGB f
 
 ```bash
 # Enable sRGB framebuffer
-FORCE_SRGB=1 RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
+FORCE_SRGB=1 RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/baseview-wine-test.exe
 # or
-FORCE_SRGB=true RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
+FORCE_SRGB=true RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/baseview-wine-test.exe
 
 # Disable sRGB framebuffer
-FORCE_SRGB=0 RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
+FORCE_SRGB=0 RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/baseview-wine-test.exe
 # or
-FORCE_SRGB=false RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
+FORCE_SRGB=false RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/baseview-wine-test.exe
 
 # Use default OpenGL configuration (not set or empty)
-wine target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
+wine target/x86_64-pc-windows-gnu/debug/baseview-wine-test.exe
 # or
-FORCE_SRGB= RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/egui-wine-test.exe
+FORCE_SRGB= RUST_BACKTRACE=full wine target/x86_64-pc-windows-gnu/debug/baseview-wine-test.exe
 ```
 
 **Behavior:**
@@ -124,14 +124,14 @@ The application prints debug messages to stderr showing which configuration is a
 
 ## Project Structure
 
-- `src/main.rs` - Main application code with egui implementation
+- `src/main.rs` - Main application code with baseview implementation
 - `Cargo.toml` - Project dependencies and metadata
 - `.cargo/config.toml` - Cross-compilation configuration
 
 ## Dependencies
 
 - `baseview` - Low-level windowing library
-- `egui-baseview` - egui integration for baseview
-- `egui` - Immediate mode GUI library
+- `baseview-baseview` - baseview integration for baseview
+- `baseview` - Immediate mode GUI library
 
 This project uses baseview instead of eframe for more direct control over OpenGL configuration, which is essential for Wine compatibility testing.

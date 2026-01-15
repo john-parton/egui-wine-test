@@ -44,12 +44,9 @@ FORCE_SRGB=1 RUST_BACKTRACE=full cargo run
 FORCE_SRGB=0 RUST_BACKTRACE=full cargo run
 ```
 
-The native build should display a simple baseview window with:
-- A greeting heading
-- A text input field (try typing your name)
-- An age slider (0-120)
-- A clickable button (prints to terminal when clicked)
-- Dynamic text showing your inputs
+The native build should display a simple baseview window with no content, i.e. a black box.
+
+Events are sent to stdout, so moving the mouse or interacting with the application should cause output without crashing.
 
 If the native build works correctly, any rendering issues in Wine can be attributed to Wine-specific OpenGL behavior rather than application bugs.
 

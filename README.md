@@ -2,6 +2,8 @@
 
 A minimal baseview application designed for bisecting and testing OpenGL behavior under Wine.
 
+> **Note:** This project was renamed from `egui-wine-test` to `baseview-wine-test` to better reflect its use of the baseview windowing library.
+
 ## Purpose
 
 This project is specifically designed to help bisect Wine behavior related to OpenGL rendering and sRGB framebuffer support. The application provides a simple baseview interface with configurable OpenGL settings to isolate rendering issues.

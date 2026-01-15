@@ -28,54 +28,42 @@ fn main() {
 }
 
 /// Create an OpenGL configuration suitable for Wine compatibility.
-/// This can be enabled by setting the environment variable WINE_COMPAT=1
+/// This can be enabled by setting the environment variable FORCE_SRGB=1 or FORCE_SRGB=true
 #[cfg(feature = "opengl")]
 fn get_gl_config() -> baseview::gl::GlConfig {
-    // Check for Wine compatibility mode
-    let wine_compat = std::env::var("WINE_COMPAT")
-        .map(|v| v == "1" || v.eq_ignore_ascii_case("true"))
-        .unwrap_or(false);
+    let srgb_string = match std::env::var("FORCE_SRGB") {
+        Ok(val) => val,
+        Err(_) => {
+            eprintln!("[egui-wine-test] FORCE_SRGB not set, using default OpenGL settings");
+            return baseview::gl::GlConfig::default();
+        }
+    };
 
-    if wine_compat {
-        eprintln!(
-            "[egui-wine-test] Wine compatibility mode enabled - using conservative OpenGL settings"
-        );
-        eprintln!("[egui-wine-test] GL version: 3.0, sRGB: disabled, vsync: disabled");
-        // Conservative settings for Wine compatibility
-        baseview::gl::GlConfig {
-            version: (3, 0), // Lower OpenGL version requirement
-            profile: baseview::gl::Profile::Core,
-            red_bits: 8,
-            blue_bits: 8,
-            green_bits: 8,
-            alpha_bits: 8,
-            depth_bits: 16,  // Reduced depth buffer
-            stencil_bits: 0, // No stencil buffer
-            samples: None,   // No MSAA
-            srgb: false,     // sRGB can be problematic in Wine
-            double_buffer: true,
-            vsync: false, // vsync can cause issues under Wine
-            ..Default::default()
+    let srgb = match srgb_string.to_ascii_lowercase().as_str() {
+        "" => {
+            eprintln!("[egui-wine-test] FORCE_SRGB is empty, using default OpenGL settings");
+            return baseview::gl::GlConfig::default();
         }
-    } else {
-        eprintln!("[egui-wine-test] Using default OpenGL settings");
-        eprintln!("[egui-wine-test] GL version: 3.2, sRGB: enabled, vsync: enabled");
-        // Default configuration
-        baseview::gl::GlConfig {
-            version: (3, 2),
-            profile: baseview::gl::Profile::Core,
-            red_bits: 8,
-            blue_bits: 8,
-            green_bits: 8,
-            alpha_bits: 8,
-            depth_bits: 24,
-            stencil_bits: 8,
-            samples: None,
-            srgb: true, // Enable sRGB by default
-            double_buffer: true,
-            vsync: true,
-            ..Default::default()
+        "1" | "true" => {
+            eprintln!("[egui-wine-test] FORCE_SRGB enabled - using sRGB framebuffer");
+            true
         }
+        "0" | "false" => {
+            eprintln!("[egui-wine-test] FORCE_SRGB disabled - not using sRGB framebuffer");
+            false
+        }
+        _ => {
+            eprintln!(
+                "[egui-wine-test] FORCE_SRGB has invalid value '{}', using default",
+                srgb_string
+            );
+            return baseview::gl::GlConfig::default();
+        }
+    };
+
+    baseview::gl::GlConfig {
+        srgb,
+        ..Default::default()
     }
 }
 

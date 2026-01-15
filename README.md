@@ -1,16 +1,17 @@
 # egui Wine Test
 
-A minimal egui "Hello World" application that is cross-compileable to Windows with Wine compatibility.
+A minimal egui application designed for bisecting and testing OpenGL behavior under Wine.
+
+## Purpose
+
+This project is specifically designed to help bisect Wine behavior related to OpenGL rendering and sRGB framebuffer support. The application provides a simple egui interface with configurable OpenGL settings to isolate rendering issues.
 
 ## Features
 
-This application demonstrates:
-- Basic egui window with a greeting
-- Text input field for entering a name
-- A slider for age selection
-- A clickable button
-- Dynamic text display
-- **Wine compatibility via OpenGL environment variables to disable sRGB**
+- Minimal egui interface for testing rendering behavior
+- Configurable sRGB framebuffer support via environment variable
+- Cross-compileable to Windows for Wine testing
+- Debug output showing active OpenGL configuration
 
 ## Building on Linux
 
@@ -25,6 +26,30 @@ cargo build
 ```bash
 cargo run --release
 ```
+
+## Testing Native Build
+
+Before bisecting Wine issues, it's recommended to verify the application works correctly on native Linux:
+
+```bash
+# Build and run natively
+cargo run --release
+
+# Test with FORCE_SRGB enabled
+FORCE_SRGB=1 cargo run --release
+
+# Test with FORCE_SRGB disabled
+FORCE_SRGB=0 cargo run --release
+```
+
+The native build should display a simple egui window with:
+- A greeting heading
+- A text input field (try typing your name)
+- An age slider (0-120)
+- A clickable button (prints to terminal when clicked)
+- Dynamic text showing your inputs
+
+If the native build works correctly, any rendering issues in Wine can be attributed to Wine-specific OpenGL behavior rather than application bugs.
 
 ## Cross-Compiling to Windows
 
@@ -65,11 +90,37 @@ wine target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
 
 ## Wine Compatibility Notes
 
-The application sets OpenGL environment variables at runtime to improve Wine compatibility:
-- `MESA_GL_VERSION_OVERRIDE=3.3` - Ensures consistent OpenGL version
-- `__GL_ALLOW_UNOFFICIAL_PROTOCOL=1` - Allows unofficial protocol extensions
+### FORCE_SRGB Environment Variable
 
-These settings help avoid sRGB framebuffer issues that are common when running OpenGL applications under Wine.
+The application supports the `FORCE_SRGB` environment variable to control sRGB framebuffer usage, which is useful for bisecting Wine rendering issues:
+
+**Usage:**
+
+```bash
+# Enable sRGB framebuffer
+FORCE_SRGB=1 wine target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
+# or
+FORCE_SRGB=true wine target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
+
+# Disable sRGB framebuffer
+FORCE_SRGB=0 wine target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
+# or
+FORCE_SRGB=false wine target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
+
+# Use default OpenGL configuration (not set or empty)
+wine target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
+# or
+FORCE_SRGB= wine target/x86_64-pc-windows-gnu/release/egui-wine-test.exe
+```
+
+**Behavior:**
+
+- `FORCE_SRGB=1` or `FORCE_SRGB=true` (case insensitive) - Forces sRGB framebuffer ON
+- `FORCE_SRGB=0` or `FORCE_SRGB=false` (case insensitive) - Forces sRGB framebuffer OFF
+- Not set or empty string - Uses default baseview OpenGL configuration
+- Invalid values - Falls back to default configuration with a warning
+
+The application prints debug messages to stderr showing which configuration is active, making it easy to verify settings during bisecting.
 
 ## Project Structure
 
@@ -79,13 +130,8 @@ These settings help avoid sRGB framebuffer issues that are common when running O
 
 ## Dependencies
 
-- `eframe` - Framework for building egui applications (uses OpenGL/glow backend)
+- `baseview` - Low-level windowing library
+- `egui-baseview` - egui integration for baseview
 - `egui` - Immediate mode GUI library
 
-## Notes
-
-The application uses eframe 0.30 which handles:
-- Window creation and management via winit
-- Event loop
-- OpenGL rendering backend (glow)
-- Cross-platform compatibility
+This project uses baseview instead of eframe for more direct control over OpenGL configuration, which is essential for Wine compatibility testing.

@@ -130,7 +130,4 @@ The application prints debug messages to stderr showing which configuration is a
 ## Dependencies
 
 - `baseview` - Low-level windowing library
-- `baseview-baseview` - baseview integration for baseview
-- `baseview` - Immediate mode GUI library
-
-This project uses baseview instead of eframe for more direct control over OpenGL configuration, which is essential for Wine compatibility testing.
+- `gl`
